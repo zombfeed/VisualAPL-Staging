@@ -9,6 +9,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+var ioSize = fyne.NewSize(10, 10)
+
 type AbilityWidget struct {
 	widget.BaseWidget
 	Title        *widget.Label
@@ -40,12 +42,12 @@ func NewAbilityWidget(
 func (ability *AbilityWidget) CreateRenderer() fyne.WidgetRenderer {
 	borders := createBorderRects()
 	iList := createInputList(ability.InputAmount)
-	inputvbox := container.NewVBox(widget.NewLabel("Input"))
+	inputvbox := container.NewVBox()
 	for i := 0; i < ability.InputAmount; i++ {
 		inputvbox.Add(iList[i])
 	}
 	oList := createOutputList(ability.OutputAmount)
-	outputvbox := container.NewVBox(widget.NewLabel("Output"))
+	outputvbox := container.NewVBox()
 	for i := 0; i < ability.OutputAmount; i++ {
 		outputvbox.Add(oList[i])
 	}
@@ -79,7 +81,7 @@ func createOutputList(n int) []*OutputWidget {
 
 	for i := 0; i < n; i++ {
 		rect := canvas.NewRectangle(color.White)
-		rect.SetMinSize(fyne.NewSize(10, 10))
+		rect.SetMinSize(ioSize)
 		rect.Refresh()
 		o := NewOutputWidget(rect)
 		output = append(output, o)
@@ -94,7 +96,7 @@ func createInputList(n int) []*InputWidget {
 	}
 	for i := 0; i < n; i++ {
 		rect := canvas.NewRectangle(color.White)
-		rect.SetMinSize(fyne.NewSize(10, 10))
+		rect.SetMinSize(ioSize)
 		o := NewInputWidget(rect)
 		input = append(input, o)
 	}
