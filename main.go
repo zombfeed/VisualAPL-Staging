@@ -15,7 +15,7 @@ func main() {
 
 	rect := canvas.NewRectangle(color.White)
 	// card := NewDraggableCard("card", "drag", rect)
-	ability := NewAbilityWidget("Ability1", rect)
+	ability := NewAbilityWidget("Ability1", rect, true, true, 2, 2)
 	ability.Resize(fyne.NewSize(250, 250))
 	content := container.NewWithoutLayout(ability)
 
