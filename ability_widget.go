@@ -19,8 +19,24 @@ type AbilityWidget struct {
 	HasOutput    bool
 	InputAmount  int
 	OutputAmount int
+	InputList    []*InputWidget
+	OutputList   []*OutputWidget
 }
 
+//================================================================
+// Interface Implementations
+//================================================================
+
+func (ability *AbilityWidget) Dragged(event *fyne.DragEvent) {
+	ability.Move(ability.Position().Add(event.Dragged))
+	ability.Refresh()
+}
+
+func (ability *AbilityWidget) DragEnd() { ability.Refresh() }
+
+// ================================================================
+// AbilityWidget Implementation
+// ================================================================
 func NewAbilityWidget(
 	title string, content fyne.CanvasObject,
 	input, output bool,
@@ -32,6 +48,8 @@ func NewAbilityWidget(
 		HasOutput:    output,
 		InputAmount:  inputAmount,
 		OutputAmount: outputAmount,
+		InputList:    make([]*InputWidget, inputAmount),
+		OutputList:   make([]*OutputWidget, outputAmount),
 	}
 
 	ability.Title.Truncation = fyne.TextTruncateEllipsis
@@ -41,36 +59,38 @@ func NewAbilityWidget(
 
 func (ability *AbilityWidget) CreateRenderer() fyne.WidgetRenderer {
 	borders := createBorderRects()
-	iList := createInputList(ability.InputAmount)
+
+	//iocontainer := container.NewWithoutLayout()
+	// iocontainer.Resize(fyne.NewSize(150, 50))
+	ability.InputList = createInputList(ability.InputAmount)
 	inputvbox := container.NewVBox()
 	for i := 0; i < ability.InputAmount; i++ {
-		inputvbox.Add(iList[i])
+		a := ability.InputList[i]
+		inputvbox.Add(ability.InputList[i])
+		a.InitialPos = a.Position()
+		a.Parent = inputvbox
+
 	}
-	oList := createOutputList(ability.OutputAmount)
+	ability.OutputList = createOutputList(ability.OutputAmount)
 	outputvbox := container.NewVBox()
 	for i := 0; i < ability.OutputAmount; i++ {
-		outputvbox.Add(oList[i])
+		a := ability.OutputList[i]
+		outputvbox.Add(a)
+		a.InitialPos = a.Position()
+		a.Parent = outputvbox
 	}
-	c := container.NewBorder(ability.Title, nil, inputvbox, outputvbox, ability.Content)
+
+	iocontainer := container.NewWithoutLayout(inputvbox, outputvbox)
+	inputvbox.Resize(fyne.NewSize(10, 10))
+	outputvbox.Resize(fyne.NewSize(10, 10))
+	outputvbox.Move((fyne.NewPos(130, 0)))
+	// inputvbox.Move(fyne.NewPos(5, 10))
+	// outputvbox.Move(fyne.NewPos(130, 10))
+	//iocontainer := container.NewGridWithColumns(2, inputvbox, outputvbox)
+
+	c := container.NewBorder(ability.Title, iocontainer, nil, nil, ability.Content)
 	containerWithBorder := container.NewBorder(borders[0], borders[1], borders[2], borders[3], c)
 	return widget.NewSimpleRenderer(containerWithBorder)
-}
-
-func (ability *AbilityWidget) Dragged(event *fyne.DragEvent) {
-	ability.Move(ability.Position().Add(event.Dragged))
-	ability.Refresh()
-}
-
-func (ability *AbilityWidget) DragEnd() { ability.Refresh() }
-
-func createBorderRects() []*canvas.Rectangle {
-	borders := make([]*canvas.Rectangle, 4)
-	for i := 0; i < 4; i++ {
-		borders[i] = canvas.NewRectangle(color.Transparent)
-		borders[i].StrokeColor = color.White
-		borders[i].StrokeWidth = 2
-	}
-	return borders
 }
 
 func createOutputList(n int) []*OutputWidget {
@@ -80,11 +100,11 @@ func createOutputList(n int) []*OutputWidget {
 	}
 
 	for i := 0; i < n; i++ {
-		rect := canvas.NewRectangle(color.White)
+		rect := canvas.NewRectangle(color.RGBA{255, 1, 1, 255})
 		rect.SetMinSize(ioSize)
 		rect.Refresh()
-		o := NewOutputWidget(rect)
-		output = append(output, o)
+		w := NewOutputWidget(rect)
+		output = append(output, w)
 	}
 	return output
 }
@@ -95,10 +115,20 @@ func createInputList(n int) []*InputWidget {
 		return input
 	}
 	for i := 0; i < n; i++ {
-		rect := canvas.NewRectangle(color.White)
+		rect := canvas.NewRectangle(color.RGBA{1, 1, 255, 255})
 		rect.SetMinSize(ioSize)
-		o := NewInputWidget(rect)
-		input = append(input, o)
+		w := NewInputWidget(rect)
+		input = append(input, w)
 	}
 	return input
+}
+
+func createBorderRects() []*canvas.Rectangle {
+	borders := make([]*canvas.Rectangle, 4)
+	for i := 0; i < 4; i++ {
+		borders[i] = canvas.NewRectangle(color.Transparent)
+		borders[i].StrokeColor = color.White
+		borders[i].StrokeWidth = 2
+	}
+	return borders
 }

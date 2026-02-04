@@ -12,12 +12,14 @@ import (
 )
 
 type VisualCanvas struct {
-	selected AbilityWidget
+	fyne.Container
+	Canvas   *fyne.Container
+	selected *AbilityWidget
 
 	Abilities []*AbilityWidget
 }
 
-func CreateVisualCanvas(size fyne.Size) *fyne.Container {
+func (vc *VisualCanvas) CreateVisualCanvas(size fyne.Size) *fyne.Container {
 	// border layout
 	// left border will be overview of all the ability nodes in the scene
 	// right border will be properties of the selected node
@@ -25,7 +27,6 @@ func CreateVisualCanvas(size fyne.Size) *fyne.Container {
 	// top border will be toolbar
 
 	console := canvas.NewRectangle(color.White)
-	console.SetMinSize(fyne.NewSize(size.Width, 100))
 	overview := canvas.NewRectangle(color.White)
 	properties := canvas.NewRectangle(color.White)
 	vcanvas := container.NewWithoutLayout()
@@ -40,24 +41,29 @@ func CreateVisualCanvas(size fyne.Size) *fyne.Container {
 		widget.NewToolbarAction(theme.ContentPasteIcon(), func() {}),
 		widget.NewToolbarSeparator(),
 		widget.NewToolbarAction(theme.FolderNewIcon(), func() {
-			node := CreateNode()
+			node := vc.CreateNode()
 			vcanvas.Add(node)
 		}),
 	)
+	console.SetMinSize(fyne.NewSize(size.Width, 100))
+	overview.SetMinSize(fyne.NewSize(100, size.Height))
+	properties.SetMinSize(fyne.NewSize(100, size.Height))
 
 	content := container.NewBorder(toolbar, console, overview, properties, vcanvas)
 	content.Resize(size)
-	return content
+	vc.Canvas = content
+	return vc.Canvas
 }
 
 func NewConsole() *fyne.CanvasObject {
 	return nil
 }
 
-func CreateNode() *fyne.Container {
+func (vc *VisualCanvas) CreateNode() *fyne.Container {
 	rect := canvas.NewRectangle(color.White)
 	ability := NewAbilityWidget("Ability1", rect, true, true, 2, 2)
 	ability.Resize(fyne.NewSize(150, 150))
 	content := container.NewWithoutLayout(ability)
+	vc.Abilities = append(vc.Abilities, ability)
 	return content
 }

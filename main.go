@@ -15,7 +15,8 @@ func main() {
 	// content := container.NewWithoutLayout(ability)
 
 	// myWindow.SetContent(content)
-	vcanvas := CreateVisualCanvas(fyne.NewSize(900, 900))
-	myWindow.SetContent(vcanvas)
+	vcanvas := VisualCanvas{}
+	vcanvas.CreateVisualCanvas(fyne.NewSize(900, 800))
+	myWindow.SetContent(vcanvas.Canvas)
 	myWindow.ShowAndRun()
 }
