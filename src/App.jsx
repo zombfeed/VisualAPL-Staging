@@ -12,7 +12,7 @@ import {
  
 import '@xyflow/react/dist/style.css';
 
-import {AbilityNode} from './nodes';
+import {AbilityNode, APLStartNode, APLEndNode} from './nodes';
  
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDContext';
@@ -20,34 +20,20 @@ import { DnDProvider, useDnD } from './DnDContext';
 
 const nodeTypes = {
     ability: AbilityNode,
+    'apl-start': APLStartNode,
+    'apl-end': APLEndNode,
   };
-
-const initialNodes = [
-  {
-    id: '1',
-    type: 'input',
-    data: { label: 'APL Start' },
-    position: { x: 250, y: 5 },
-  },
-  {
-    id: '2',
-    type:'ability',
-    data:{ label: 'ability'},
-    position:{x:300, y: 100},
-  }
-];
  
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 function DnDFlow(){
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useDnD();
 
- 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
  
   const onDragOver = useCallback((event) => {
@@ -64,9 +50,6 @@ function DnDFlow(){
         return;
       }
  
-      // project was renamed to screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,

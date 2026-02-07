@@ -1,0 +1,77 @@
+[
+    {
+        "id": 1,
+        "name": "dispatch",
+        "url": "/Outlaw/ability_rogue_waylay.png"
+    },
+    {
+        "id": 2,
+        "name": "ambush",
+        "url": "/Outlaw/ability_rogue_ambush.png"
+    },
+    {
+        "id": 3,
+        "name": "roll_the_bones",
+        "url": "/Outlaw/ability_rogue_rollthebones.png"
+    },
+    {
+        "id": 4,
+        "name": "roll_the_bones_stage1",
+        "url": "/Outlaw/inv12_ability_rogue_rollthebones_one.png"
+    },
+    {
+        "id": 5,
+        "name": "roll_the_bones_stage2",
+        "url": "/Outlaw/inv12_ability_rogue_rollthebones_two.png"
+    },
+    {
+        "id": 6,
+        "name": "roll_the_bones_stage3",
+        "url": "/Outlaw/inv12_ability_rogue_rollthebones_three.png"
+    },
+    {
+        "id": 7,
+        "name": "roll_the_bones_stage4",
+        "url": "/Outlaw/inv12_ability_rogue_rollthebones_jackpot.png"
+    },
+    {
+        "id": 8,
+        "name": "sinister_strike",
+        "url": "/Outlaw/spell_shadow_ritualofsacrifice.png"
+    },
+    {
+        "id": 9,
+        "name": "adrenaline_rush",
+        "url": "/Outlaw/spell_shadow_shadowworddominate.png"
+    },
+    {
+        "id": 10,
+        "name": "blade_rush",
+        "url": "/Outlaw/ability_arakkoa_spinning_blade.png"
+    },
+    {
+        "id": 11,
+        "name": "killing_spree",
+        "url": "/Outlaw/inv_112_rogue_betweentheeyes.png"
+    },
+    {
+        "id": 12,
+        "name": "between_the_eyes",
+        "url": "/Outlaw/inv_weapon_rifle_01.png"
+    },
+    {
+        "id": 13,
+        "name": "opportunity",
+        "url": "/Outlaw/ability_rogue_pistolshot.png"
+    },
+    {
+        "id": 14,
+        "name": "preparation",
+        "url": "/Outlaw/ability_rogue_preparation.png"
+    },
+    {
+        "id": 15,
+        "name": "keep_it_rolling",
+        "url": "/Outlaw/ability_rogue_keepitrolling.png"
+    }
+]

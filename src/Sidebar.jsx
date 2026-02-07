@@ -12,14 +12,14 @@ export default () => {
   return (
     <aside>
       <div className="description">You can drag these nodes to the pane on the right.</div>
-      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'input')} draggable>
+      <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'apl-start')} draggable>
         APL Start Node
       </div>
       <div className="dndnode" onDragStart={(event) => onDragStart(event, 'ability')} draggable>
-        Default Node
+        Ability Node
       </div>
-      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'output')} draggable>
-        Output Node
+      <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'apl-end')} draggable>
+        End Node
       </div>
     </aside>
   );

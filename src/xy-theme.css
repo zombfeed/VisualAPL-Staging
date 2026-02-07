@@ -1,7 +1,7 @@
 /* xyflow theme files. Delete these to start from our base */
  
 .react-flow {
-  --xy-background-color: #f7f9fb;
+  --xy-background-color: #494949;
   /* Custom Variables */
   --xy-theme-selected: #f57dbd;
   --xy-theme-hover: #c5c5c5;
@@ -41,7 +41,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px;
+  padding: 5px;
   font-size: 12px;
   flex-direction: column;
   border: var(--xy-node-border-default);
