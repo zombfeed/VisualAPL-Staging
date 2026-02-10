@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "dndnode_0",
+      "type": "apl-start",
+      "position": {
+        "x": 65.84375,
+        "y": -28.5
+      },
+      "data": {
+        "className": "Rogue",
+        "specName": "Subtlety"
+      },
+      "measured": {
+        "width": 169,
+        "height": 71
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "dndnode_1",
+      "type": "ability",
+      "position": {
+        "x": 130.515625,
+        "y": 102.5
+      },
+      "data": {
+        "abilityName": "Vanish"
+      },
+      "measured": {
+        "width": 178,
+        "height": 82
+      },
+      "selected": false,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "dndnode_0",
+      "sourceHandle": "right-source-handle",
+      "target": "dndnode_1",
+      "targetHandle": "left-target-handle",
+      "id": "xy-edge__dndnode_0right-source-handle-dndnode_1left-target-handle"
+    }
+  ],
+  "viewport": {
+    "x": -94.1875,
+    "y": 150,
+    "zoom": 2
+  }
+}
