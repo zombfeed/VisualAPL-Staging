@@ -1,8 +1,7 @@
 import {Position, Handle, useReactFlow} from '@xyflow/react';
 import { useEffect, useState } from 'react';
-
-const iconURL = '/assets/SpellIcons';
-const abilitiesURL = '/assets/SpellIcons/abilities.json';
+import abilitiesJson from '../public/SpellIcons/abilities.json';
+const iconURL = '/VisualAPL/SpellIcons';
 
 function findAPLStart({id, data}){
     const {getNodes, getEdges} = useReactFlow();
@@ -46,10 +45,11 @@ export function AbilityNode({id, data}){
     const [selectedName, setSelectedName] = useState(data?.abilityName || '');
 
     useEffect(() =>{
-        fetch(abilitiesURL)
-            .then((response)=>response.json())
-            .then((json) => setImages(json))
-            .catch(() => setImages([]));
+        try {
+            setImages(Array.isArray(abilitiesJson) ? abilitiesJson : []);
+        } catch (e) {
+            setImages([]);
+        }
     }, []);
 
     const handleChange = (event) => {
@@ -131,30 +131,28 @@ export function APLStartNode({id, data}){
     const [specName, setSpecName] = useState(data?.specName || '');
 
     useEffect(() =>{
-        fetch(abilitiesURL)
-            .then((r) => r.json())
-            .then((json) => {
-                const mapping = {};
-                const cls = [];
-                for (const entry of json) {
-                    const keys = Object.keys(entry);
-                    if (!keys.length) continue;
-                    const c = keys[0];
-                    mapping[c] = Object.keys(entry[c] || {});
-                    cls.push(c);
-                }
-                setClassSpecs(mapping);
-                setClasses(cls);
+        try {
+            const json = Array.isArray(abilitiesJson) ? abilitiesJson : [];
+            const mapping = {};
+            const cls = [];
+            for (const entry of json) {
+                const keys = Object.keys(entry);
+                if (!keys.length) continue;
+                const c = keys[0];
+                mapping[c] = Object.keys(entry[c] || {});
+                cls.push(c);
+            }
+            setClassSpecs(mapping);
+            setClasses(cls);
 
-                const defaultClass = data?.className || cls[0] || '';
-                const defaultSpec = data?.specName || (mapping[defaultClass] ? mapping[defaultClass][0] : '');
-                setClassName(defaultClass);
-                setSpecName(defaultSpec);
-            })
-            .catch(() => {
-                setClassSpecs({});
-                setClasses([]);
-            });
+            const defaultClass = data?.className || cls[0] || '';
+            const defaultSpec = data?.specName || (mapping[defaultClass] ? mapping[defaultClass][0] : '');
+            setClassName(defaultClass);
+            setSpecName(defaultSpec);
+        } catch (e) {
+            setClassSpecs({});
+            setClasses([]);
+        }
     }, [data]);
 
     useEffect(() => {
