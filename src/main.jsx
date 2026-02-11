@@ -5,6 +5,8 @@ import FlowWithProvider from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <FlowWithProvider />
+    <BrowserRouter basename={"/VisualAPL/"}>
+      <FlowWithProvider />
+    </BrowserRouter>
   </StrictMode>,
 )
