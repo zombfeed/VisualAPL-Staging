@@ -33,9 +33,35 @@ const nodeTypes = {
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
+function constructConditionalString(currentNode, nodeData, edges) {
+  var cond = '';
+  if (!(currentNode in edges)) return cond;
+  for (var i = 0; i < edges[currentNode].length; i++) {
+    var target = edges[currentNode][i];
+    if (!nodeData[target].type.includes('cond')) {
+      continue;
+    }
+    if (nodeData[target].type === 'conditional-ability') {
+      if (nodeData[target].data.types && nodeData[target].data.types.includes('cooldown')) {
+        cond += `${nodeData[target].data.abilityName.replaceAll(' ', '_')}.ready`;
+      } else if (nodeData[target].data.types && nodeData[target].data.types.includes('buff')) {
+        cond += `${nodeData[target].data.abilityName.replaceAll(' ', '_')}.up`;
+      }
+    } else if (nodeData[target].type == 'conditional-or') {
+      cond += `|`;
+    } else if (nodeData[target].type == 'conditional-and') {
+      cond += `&`;
+    }
+    return cond += constructConditionalString(target, nodeData, edges);
+  }
+  return cond;
+
+}
+
 function convertToAPL(flow) {
   var apl = ""
   var abilityList = "actions";
+  
   var relevant_data = {}
   for (var i = 0; i < flow.nodes.length; i++) {
     relevant_data[flow.nodes[i].id] = {
@@ -48,23 +74,39 @@ function convertToAPL(flow) {
       }))
     };
   }
-  var edges = []
+
+  var edges = {}
   for (var i = 0; i < flow.edges.length; i++) {
-    edges.push({
-      'source': flow.edges[i].source,
-      'target': flow.edges[i].target,
-    });
-  }
-  for (var i = 0; i < flow.edges.length; i++) {
-    if (relevant_data[edges[i].source].type === 'apl-start') {
-      if (relevant_data[edges[i].target].type === 'ability') {
-        apl += `${abilityList}=${relevant_data[edges[i].target].data.abilityName}\n`;
-      }
-    } else if (relevant_data[edges[i].source].type === 'ability') {
-      apl += `${abilityList}+=${relevant_data[edges[i].target].data.abilityName}\n`;
-    } else if (relevant_data[edges[i].target].type === 'apl-end') {
-      abilityList = `actions${i}`;
+    if (!edges[flow.edges[i].source]) {
+      edges[flow.edges[i].source] = [];
     }
+    edges[flow.edges[i].source].push(flow.edges[i].target);
+  }
+
+
+  for (const edge in edges) {
+    var j = 0;
+    for (var i = 0; i < edges[edge].length; i++) {
+      var target = edges[edge][i];
+      if (relevant_data[edge].type === 'apl-start') {
+        if (relevant_data[target].type === 'ability') {
+          apl += `${abilityList}=${relevant_data[target].data.abilityName.replaceAll(' ', '_')}`;
+          if (relevant_data[target].data.hasConditionals === true) {
+            apl += `,if=`;
+            apl += constructConditionalString(target, relevant_data, edges);
+          }
+        }
+      } else if (relevant_data[target].type === 'ability') {
+        apl += `\n${abilityList}+=/${relevant_data[target].data.abilityName.replaceAll(' ', '_')}`;
+        if (relevant_data[target].data.hasConditionals === true) {
+          apl += `,if=`;
+          apl += constructConditionalString(target, relevant_data, edges);
+        }
+      } else if (relevant_data[target].type === 'apl-end') {
+        abilityList = `\nactions${j}`;
+      }
+    }
+    j++;
   }
   return apl;
 }
@@ -127,13 +169,16 @@ function DnDFlow() {
         } else if (n.type === 'ability') {
           data.abilityName = n.data?.abilityName;
           data.conditional = n.data?.hasConditionals;
+          data.types = n.data?.types;
+        } else if (n.type === 'conditional-ability') {
+          data.abilityName = n.data?.abilityName;
+          data.types = n.data?.types;
         }
         return { ...n, data };
       });
 
       const fullFlow = { ...flow, nodes: prunedNodes, edges: edges || [] };
       const json = JSON.stringify(fullFlow, null, 2);
-      console.log(json);
       const aplfile = convertToAPL(flow);
       localStorage.setItem(APLKey, aplfile);
 

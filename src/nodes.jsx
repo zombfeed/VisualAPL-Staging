@@ -43,6 +43,7 @@ export function AbilityNode({ id, data }) {
     const [imagesJson, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(data?.imageUrl || '');
     const [selectedName, setSelectedName] = useState(data?.abilityName || '');
+    const [selectedTypes, setSelectedTypes] = useState(data?.types || '');
     const updateNodeInternals = useUpdateNodeInternals();
 
     const toggleHandles = (event) => {
@@ -72,6 +73,7 @@ export function AbilityNode({ id, data }) {
             const parsed = JSON.parse(event.target.value || '{}');
             setSelectedImage(parsed.url || '');
             setSelectedName(parsed.name || '');
+            setSelectedTypes(parsed.types ||'');
         } catch {
             setSelectedImage(event.target.value || '');
             setSelectedName('');
@@ -82,11 +84,11 @@ export function AbilityNode({ id, data }) {
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === id) {
-                    return { ...node, data: { ...node.data, abilityName: selectedName } };
+                    return { ...node, data: { ...node.data, abilityName: selectedName, types: selectedTypes } };
                 }
                 return node;
             }));
-    }, [selectedImage, selectedName, id, setNodes]);
+    }, [selectedImage, selectedName, selectedTypes, id, setNodes]);
 
     const startNode = findAPLStart({ id, data });
 
@@ -110,7 +112,7 @@ export function AbilityNode({ id, data }) {
         options = data?.options || [];
     }
 
-    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName }) : '';
+    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName, types: selectedTypes }) : '';
 
     return (
         <div className="ability-node">
@@ -118,7 +120,7 @@ export function AbilityNode({ id, data }) {
                 <select onChange={handleChange} value={selectedValue} style={{ minWidth: 160 }}>
                     <option value="">-- select ability --</option>
                     {options.map((opt) => {
-                        const value = JSON.stringify({ url: opt.url, name: opt.name });
+                        const value = JSON.stringify({ url: opt.url, name: opt.name, types: opt.types });
                         return (
                             <option key={opt.id ?? opt.name} value={value}>{opt.name}</option>
                         );
@@ -150,6 +152,7 @@ export function ConditionalAbilityNode({ id, data }) {
     const [imagesJson, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(data?.imageUrl || '');
     const [selectedName, setSelectedName] = useState(data?.abilityName || '');
+    const [selectedTypes, setSelectedTypes] = useState(data?.types || '');
     const updateNodeInternals = useUpdateNodeInternals();
 
     //TODO: handle various ability options, such as stack count, remaining duration, etc...
@@ -168,6 +171,7 @@ export function ConditionalAbilityNode({ id, data }) {
             const parsed = JSON.parse(event.target.value || '{}');
             setSelectedImage(parsed.url || '');
             setSelectedName(parsed.name || '');
+            setSelectedTypes(parsed.types || '');
         } catch {
             setSelectedImage(event.target.value || '');
             setSelectedName('');
@@ -178,11 +182,11 @@ export function ConditionalAbilityNode({ id, data }) {
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === id) {
-                    return { ...node, data: { ...node.data, abilityName: selectedName } };
+                    return { ...node, data: { ...node.data, abilityName: selectedName, types: selectedTypes } };
                 }
                 return node;
             }));
-    }, [selectedImage, selectedName, id, setNodes]);
+    }, [selectedImage, selectedName, selectedTypes, id, setNodes]);
 
     const startNode = findAPLStart({ id, data });
 
@@ -206,7 +210,7 @@ export function ConditionalAbilityNode({ id, data }) {
         options = data?.options || [];
     }
 
-    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName }) : '';
+    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName, types: selectedTypes }) : '';
 
     return (
         <div className="ability-node">
@@ -214,7 +218,7 @@ export function ConditionalAbilityNode({ id, data }) {
                 <select onChange={handleChange} value={selectedValue} style={{ minWidth: 160 }}>
                     <option value="">-- select ability --</option>
                     {options.map((opt) => {
-                        const value = JSON.stringify({ url: opt.url, name: opt.name });
+                        const value = JSON.stringify({ url: opt.url, name: opt.name, types: opt.types });
                         return (
                             <option key={opt.id ?? opt.name} value={value}>{opt.name}</option>
                         );
