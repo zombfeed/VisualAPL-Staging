@@ -1,15 +1,15 @@
 @import url('./xy-theme.css');
- 
+
 html,
 body {
   margin: 0;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   box-sizing: border-box;
   color-scheme: light dark;
-    line-height: 1.5;
+  line-height: 1.5;
   font-weight: 400;
 
-  
+
   color: rgba(0, 0, 0, 0.87);
   background-color: #242424;
 
@@ -23,7 +23,7 @@ body {
   width: 100vw;
   height: 100vh;
 }
- 
+
 .dndflow {
   flex-direction: column;
   display: flex;
@@ -31,19 +31,19 @@ body {
   height: 100%;
 
 }
- 
+
 .dndflow aside {
   border-right: 1px solid #eee;
   padding: 15px 10px;
   font-size: 12px;
   background: #fcfcfc;
 }
- 
+
 .dndflow aside .description {
   margin-bottom: 10px;
-  color:#eee;
+  color: #eee;
 }
- 
+
 .dndflow .dndnode {
   height: 20px;
   padding: 4px;
@@ -54,42 +54,63 @@ body {
   justify-content: center;
   align-items: center;
   cursor: grab;
-  color:#eee;
+  color: #eee;
 }
- 
+
 .dndflow .dndnode.input {
   border-color: #0041d0;
 }
- 
+
 .dndflow .dndnode.output {
   border-color: #ff0072;
 }
- 
+
 .dndflow .reactflow-wrapper {
   flex-grow: 1;
   height: 100%;
 }
- 
+
 .dndflow .selectall {
   margin-top: 10px;
 }
- 
+
 @media screen and (min-width: 768px) {
   .dndflow {
     flex-direction: row;
   }
- 
+
   .dndflow aside {
     width: 20%;
     max-width: 250px;
-    background-color:#4e4e4e;
+    background-color: #4e4e4e;
   }
 }
 
 
 .ability-node {
-  border: 1px solid #eee;
+  border: 1px solid #747474;
   padding: 2px;
   border-radius: 5px;
-  background:rgb(30, 30, 30); 
+  background: rgb(30, 30, 30);
+  color: #eee;
+}
+
+.conditional-node {
+  width: 75px;
+  height: 50px;
+  border: 1px solid #747474;
+  padding: 2px;
+  border-radius: 5px;
+  background: rgb(30, 30, 30);
+  color: #eee;
+}
+
+.handle-hidden {
+  visibility: hidden;
+}
+
+.conditional-checkbox{
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
 }

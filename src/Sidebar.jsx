@@ -21,6 +21,9 @@ export default () => {
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'apl-end')} draggable>
         End Node
       </div>
+      <div className="dndnode conditional" onDragStart={(event) => onDragStart(event, 'conditional-node')} draggable>
+        Conditional Node
+      </div>
     </aside>
   );
 };

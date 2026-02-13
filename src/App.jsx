@@ -14,7 +14,7 @@ import {
 
 import '@xyflow/react/dist/style.css';
 
-import { AbilityNode, APLStartNode, APLEndNode } from './nodes';
+import { AbilityNode, APLStartNode, APLEndNode, ConditionalNode } from './nodes';
 
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDContext';
@@ -25,6 +25,7 @@ const nodeTypes = {
   ability: AbilityNode,
   'apl-start': APLStartNode,
   'apl-end': APLEndNode,
+  'conditional-node': ConditionalNode,
 };
 
 let id = 0;
@@ -129,6 +130,7 @@ function DnDFlow() {
 
       const fullFlow = { ...flow, nodes: prunedNodes, edges: edges || [] };
       const json = JSON.stringify(fullFlow, null, 2);
+      console.log(json);
       const aplfile = convertToAPL(flow);
       localStorage.setItem(APLKey, aplfile);
 
