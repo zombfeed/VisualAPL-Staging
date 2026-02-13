@@ -14,7 +14,7 @@ import {
 
 import '@xyflow/react/dist/style.css';
 
-import { AbilityNode, APLStartNode, APLEndNode, ConditionalNode } from './nodes';
+import { AbilityNode, APLStartNode, APLEndNode, ConditionalAbilityNode, ConditionalAndNode, ConditoinalOrNode } from './nodes';
 
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDContext';
@@ -25,7 +25,9 @@ const nodeTypes = {
   ability: AbilityNode,
   'apl-start': APLStartNode,
   'apl-end': APLEndNode,
-  'conditional-node': ConditionalNode,
+  'conditional-ability': ConditionalAbilityNode,
+  'conditional-or': ConditoinalOrNode,
+  'conditional-and': ConditionalAndNode,
 };
 
 let id = 0;
@@ -124,6 +126,7 @@ function DnDFlow() {
           data.specName = n.data?.specName;
         } else if (n.type === 'ability') {
           data.abilityName = n.data?.abilityName;
+          data.conditional = n.data?.hasConditionals;
         }
         return { ...n, data };
       });

@@ -15,14 +15,20 @@ export default () => {
       <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'apl-start')} draggable>
         APL Start Node
       </div>
-      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'ability')} draggable>
-        Ability Node
-      </div>
       <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'apl-end')} draggable>
         End Node
       </div>
-      <div className="dndnode conditional" onDragStart={(event) => onDragStart(event, 'conditional-node')} draggable>
-        Conditional Node
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, 'ability')} draggable>
+        Ability Node
+      </div>
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, "conditional-ability")} draggable>
+        Conditional Ability Node
+      </div>
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, "conditional-or")} draggable>
+        OR
+      </div>
+      <div className="dndnode" onDragStart={(event) => onDragStart(event, "conditional-and")} draggable>
+        AND
       </div>
     </aside>
   );

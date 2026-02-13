@@ -50,7 +50,7 @@ export function AbilityNode({ id, data }) {
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === id) {
-                    const newData = { ...node.data, showHandles: checked };
+                    const newData = { ...node.data, hasConditionals: checked };
                     return { ...node, data: newData };
                 }
                 return node;
@@ -124,22 +124,139 @@ export function AbilityNode({ id, data }) {
                         );
                     })}
                 </select>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                    {selectedImage && (
+                        <img src={selectedImage} alt={selectedName || 'Selected'} style={{ display: 'block', marginTop: '5px', maxWidth: 64 }} />
+                    )}
+                    {selectedName && (
+                        <div style={{ marginTop: 4, fontSize: 12 }}></div>
+                    )}
+                    <div className='conditional-checkbox' style={{position:'fixed', top: "38%", right: "8px", display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <label style={{ display: 'relative', alignItems: 'center', top: 5 }}>If</label>
+                        <input type="checkbox" onChange={toggleHandles} checked={data.hasConditionals || false} />
+                    </div>
+                    <Handle type="source" position={Position.Right} id="cond-left-source-handle" style={{ top: '50%' }} className={!data.hasConditionals ? 'handle-hidden' : ''} />
+                </div>
+            </div>
+            {/* </div> */}
+            <Handle type="source" position={Position.Bottom} id="bottom-source-handle" />
+            <Handle type="target" position={Position.Top} id="top-target-handle" />
+        </div>
+    );
+}
 
-                {selectedImage && (
-                    <img src={selectedImage} alt={selectedName || 'Selected'} style={{ display: 'block', marginTop: '5px', maxWidth: 64 }} />
-                )}
-                {selectedName && (
-                    <div style={{ marginTop: 4, fontSize: 12 }}></div>
-                )}
+export function ConditionalAbilityNode({ id, data }) {
+    const { setNodes } = useReactFlow();
+    const [imagesJson, setImages] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(data?.imageUrl || '');
+    const [selectedName, setSelectedName] = useState(data?.abilityName || '');
+    const updateNodeInternals = useUpdateNodeInternals();
+
+    //TODO: handle various ability options, such as stack count, remaining duration, etc...
+
+
+    useEffect(() => {
+        try {
+            setImages(Array.isArray(abilitiesJson) ? abilitiesJson : []);
+        } catch (e) {
+            setImages([]);
+        }
+    }, []);
+
+    const handleChange = (event) => {
+        try {
+            const parsed = JSON.parse(event.target.value || '{}');
+            setSelectedImage(parsed.url || '');
+            setSelectedName(parsed.name || '');
+        } catch {
+            setSelectedImage(event.target.value || '');
+            setSelectedName('');
+        }
+    };
+
+    useEffect(() => {
+        setNodes((nds) =>
+            nds.map((node) => {
+                if (node.id === id) {
+                    return { ...node, data: { ...node.data, abilityName: selectedName } };
+                }
+                return node;
+            }));
+    }, [selectedImage, selectedName, id, setNodes]);
+
+    const startNode = findAPLStart({ id, data });
+
+    const className = startNode?.data?.className;
+    const specName = startNode?.data?.specName;
+
+    let options = [];
+    if (Array.isArray(imagesJson) && imagesJson.length && className && specName) {
+        for (const entry of imagesJson) {
+            if (entry[className] && entry[className][specName]) {
+                options = entry[className][specName].map((it) => {
+                    const fullUrl = it.url?.startsWith(iconURL) ? it.url : `${iconURL}${it.url}`;
+                    return { ...it, url: fullUrl };
+                });
+                break;
+            }
+        }
+    }
+
+    if (!options.length) {
+        options = data?.options || [];
+    }
+
+    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName }) : '';
+
+    return (
+        <div className="ability-node">
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <select onChange={handleChange} value={selectedValue} style={{ minWidth: 160 }}>
+                    <option value="">-- select ability --</option>
+                    {options.map((opt) => {
+                        const value = JSON.stringify({ url: opt.url, name: opt.name });
+                        return (
+                            <option key={opt.id ?? opt.name} value={value}>{opt.name}</option>
+                        );
+                    })}
+                </select>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                    {selectedImage && (
+                        <img src={selectedImage} alt={selectedName || 'Selected'} style={{ display: 'block', marginTop: '5px', maxWidth: 64 }} />
+                    )}
+                    {selectedName && (
+                        <div style={{ marginTop: 4, fontSize: 12 }}></div>
+                    )}
+                </div>
+                {/* <div className='conditional-checkbox' style={{ top: "50%", position: "absolute", right: "8px" }}>
+                    <label style={{ display: 'absolute', alignItems: 'center', top: '5px' }}>If</label>
+                    <input type="checkbox" onChange={toggleHandles} checked={data.showHandles || false} />
+
+                    <Handle type="source" position={Position.Right} id="cond-left-source-handle" style={{ position: "absolute", right: "-8px" }} className={!data.showHandles ? 'handle-hidden' : ''} />
+                </div> */}
             </div>
-            <div className='conditional-checkbox' style={{ top: "75%", position: "relative" }}>
-                <label>
-                    <input type="checkbox" onChange={toggleHandles} checked={data.showHandles || false} /> If
-                </label>
-                <Handle type="target" position={Position.Left} id="conditionals-left-target-handle" style={{position:"absolute", left:"-8px"}} className={!data.showHandles ? 'handle-hidden' : ''} />
-            </div>
-            <Handle type="source" position={Position.Right} id="right-source-handle" style={{ top: "25%" }} />
-            <Handle type="target" position={Position.Left} id="left-target-handle" style={{ top: "25%" }} />
+            <Handle type="source" position={Position.Right} id="cond-ability-right-source-handle" />
+            <Handle type="target" position={Position.Left} id="cond-ability-left-target-handle" />
+        </div>
+    );
+}
+
+export function ConditoinalOrNode() {
+    return (
+        <div className="conditional-or-node">
+            <label style={{ display: 'absolute', alignItems: 'center', top: '5px' }}>COND: OR</label>
+            <Handle type="target" position={Position.Left} id="cond-left-target-handle" />
+            <Handle type="source" position={Position.Right} id="cond-right-source-handle" />
+        </div>
+    );
+}
+
+export function ConditionalAndNode() {
+    return (
+        <div className="conditional-and-node">
+            <label style={{ display: 'absolute', alignItems: 'center', top: '5px' }}>COND: AND</label>
+            <Handle type="target" position={Position.Left} id="cond-left-target-handle" />
+            <Handle type="source" position={Position.Right} id="cond-right-source-handle" />
         </div>
     );
 }
@@ -215,7 +332,7 @@ export function APLStartNode({ id, data }) {
                 </select>
             </div>
 
-            <Handle type="source" position={Position.Right} id="right-source-handle" />
+            <Handle type="source" position={Position.Bottom} id="bottom-source-handle" />
         </div>
     );
 }
@@ -224,19 +341,7 @@ export function APLEndNode() {
     return (
         <div className="apl-end-node">
             End
-            <Handle type="target" position={Position.Left} id="left-target-handle" />
-        </div>
-    );
-}
-
-export function ConditionalNode() {
-    return (
-        <div className="conditional-node">
-            Conditional Node
-            <Handle type="target" position={Position.Left} id="left-target-handle" style={{ top: '25%' }} />
-            <Handle type="source" position={Position.Right} id="right-continue-source" style={{ top: '25%', backgroundColor: '#777777' }} />
-            <Handle type="source" position={Position.Right} id="right-true-source" style={{ top: '50%', backgroundColor: '#0041d0' }} />
-            <Handle type="source" position={Position.Right} id="right-false-source" style={{ top: '75%', backgroundColor: '#d0000a' }} />
+            <Handle type="target" position={Position.Top} id="top-target-handle" />
         </div>
     );
 }
