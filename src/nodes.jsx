@@ -1,8 +1,7 @@
 import { Position, useReactFlow, useUpdateNodeInternals } from '@xyflow/react';
 import { useEffect, useState } from 'react';
-import LimitHandle from './handles.jsx';
-
-const iconURL = '/VisualAPL/SpellIcons';
+import abilitiesJson from '../public/SpellIcons/abilities.json';
+const iconURL = '/VisualAPL-Staging/SpellIcons';
 
 function findAPLStart({ id, data }) {
     const { getNodes, getEdges } = useReactFlow();
