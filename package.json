@@ -1,9 +1,9 @@
 {
-  "name": "visualapl",
+  "name": "visualapl-staging",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://zombfeed.github.io/VisualAPL",
+  "homepage": "https://zombfeed.github.io/VisualAPL-Staging",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
