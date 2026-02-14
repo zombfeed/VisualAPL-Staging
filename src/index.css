@@ -17,6 +17,8 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow:hidden;
 }
 
 #app {
@@ -81,6 +83,8 @@ body {
 
   .dndflow aside {
     width: 20%;
+    height: 100vh;
+    overflow-y: scroll;
     max-width: 250px;
     background-color: #4e4e4e;
   }
@@ -93,6 +97,8 @@ body {
   border-radius: 5px;
   background: rgb(30, 30, 30);
   color: #eee;
+  height: 100px;
+  width: 150px;
 }
 
 .handle-hidden {
@@ -104,3 +110,4 @@ body {
   align-items: center;
   margin-top: 4px;
 }
+

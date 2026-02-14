@@ -1,6 +1,7 @@
-import { Position, Handle, useReactFlow, useUpdateNodeInternals } from '@xyflow/react';
+import { Position, useReactFlow, useUpdateNodeInternals } from '@xyflow/react';
 import { useEffect, useState } from 'react';
-import abilitiesJson from '../public/SpellIcons/abilities.json';
+import LimitHandle from './handles.jsx';
+
 const iconURL = '/VisualAPL/SpellIcons';
 
 function findAPLStart({ id, data }) {
@@ -40,7 +41,6 @@ function findAPLStart({ id, data }) {
 
 export function AbilityNode({ id, data }) {
     const { setNodes } = useReactFlow();
-    const [imagesJson, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(data?.imageUrl || '');
     const [selectedName, setSelectedName] = useState(data?.abilityName || '');
     const [selectedTypes, setSelectedTypes] = useState(data?.types || '');
@@ -60,96 +60,31 @@ export function AbilityNode({ id, data }) {
         updateNodeInternals(id);
     };
 
-    useEffect(() => {
-        try {
-            setImages(Array.isArray(abilitiesJson) ? abilitiesJson : []);
-        } catch (e) {
-            setImages([]);
-        }
-    }, []);
-
-    const handleChange = (event) => {
-        try {
-            const parsed = JSON.parse(event.target.value || '{}');
-            setSelectedImage(parsed.url || '');
-            setSelectedName(parsed.name || '');
-            setSelectedTypes(parsed.types ||'');
-        } catch {
-            setSelectedImage(event.target.value || '');
-            setSelectedName('');
-        }
-    };
-
-    useEffect(() => {
-        setNodes((nds) =>
-            nds.map((node) => {
-                if (node.id === id) {
-                    return { ...node, data: { ...node.data, abilityName: selectedName, types: selectedTypes } };
-                }
-                return node;
-            }));
-    }, [selectedImage, selectedName, selectedTypes, id, setNodes]);
-
-    const startNode = findAPLStart({ id, data });
-
-    const className = startNode?.data?.className;
-    const specName = startNode?.data?.specName;
-
-    let options = [];
-    if (Array.isArray(imagesJson) && imagesJson.length && className && specName) {
-        for (const entry of imagesJson) {
-            if (entry[className] && entry[className][specName]) {
-                options = entry[className][specName].map((it) => {
-                    const fullUrl = it.url?.startsWith(iconURL) ? it.url : `${iconURL}${it.url}`;
-                    return { ...it, url: fullUrl };
-                });
-                break;
-            }
-        }
-    }
-
-    if (!options.length) {
-        options = data?.options || [];
-    }
-
-    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName, types: selectedTypes }) : '';
-
     return (
         <div className="ability-node">
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <select onChange={handleChange} value={selectedValue} style={{ minWidth: 160 }}>
-                    <option value="">-- select ability --</option>
-                    {options.map((opt) => {
-                        const value = JSON.stringify({ url: opt.url, name: opt.name, types: opt.types });
-                        return (
-                            <option key={opt.id ?? opt.name} value={value}>{opt.name}</option>
-                        );
-                    })}
-                </select>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {selectedName && (
+                    <div style={{ marginTop: 4, fontSize: 12 }}>{selectedName}</div>
+                )}
                     {selectedImage && (
                         <img src={selectedImage} alt={selectedName || 'Selected'} style={{ display: 'block', marginTop: '5px', maxWidth: 64 }} />
                     )}
-                    {selectedName && (
-                        <div style={{ marginTop: 4, fontSize: 12 }}></div>
-                    )}
-                    <div className='conditional-checkbox' style={{position:'fixed', top: "38%", right: "8px", display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <div className='conditional-checkbox' style={{ position: 'fixed', top: "38%", right: "8px", display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <label style={{ display: 'relative', alignItems: 'center', top: 5 }}>If</label>
                         <input type="checkbox" onChange={toggleHandles} checked={data.hasConditionals || false} />
                     </div>
-                    <Handle type="source" position={Position.Right} id="cond-left-source-handle" style={{ top: '50%' }} className={!data.hasConditionals ? 'handle-hidden' : ''} />
+                    <LimitHandle type="source" position={Position.Right} id="cond-left-source-handle" style={{ top: '50%' }} className={!data.hasConditionals ? 'handle-hidden' : ''} connectioncount={1} />
                 </div>
             </div>
-            {/* </div> */}
-            <Handle type="source" position={Position.Bottom} id="bottom-source-handle" />
-            <Handle type="target" position={Position.Top} id="top-target-handle" />
+            <LimitHandle type="source" position={Position.Bottom} id="bottom-source-handle" connectioncount={1}/>
+            <LimitHandle type="target" position={Position.Top} id="top-target-handle" connectioncount={1}/>
         </div>
     );
 }
 
 export function ConditionalAbilityNode({ id, data }) {
     const { setNodes } = useReactFlow();
-    const [imagesJson, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(data?.imageUrl || '');
     const [selectedName, setSelectedName] = useState(data?.abilityName || '');
     const [selectedTypes, setSelectedTypes] = useState(data?.types || '');
@@ -158,99 +93,30 @@ export function ConditionalAbilityNode({ id, data }) {
     //TODO: handle various ability options, such as stack count, remaining duration, etc...
 
 
-    useEffect(() => {
-        try {
-            setImages(Array.isArray(abilitiesJson) ? abilitiesJson : []);
-        } catch (e) {
-            setImages([]);
-        }
-    }, []);
-
-    const handleChange = (event) => {
-        try {
-            const parsed = JSON.parse(event.target.value || '{}');
-            setSelectedImage(parsed.url || '');
-            setSelectedName(parsed.name || '');
-            setSelectedTypes(parsed.types || '');
-        } catch {
-            setSelectedImage(event.target.value || '');
-            setSelectedName('');
-        }
-    };
-
-    useEffect(() => {
-        setNodes((nds) =>
-            nds.map((node) => {
-                if (node.id === id) {
-                    return { ...node, data: { ...node.data, abilityName: selectedName, types: selectedTypes } };
-                }
-                return node;
-            }));
-    }, [selectedImage, selectedName, selectedTypes, id, setNodes]);
-
-    const startNode = findAPLStart({ id, data });
-
-    const className = startNode?.data?.className;
-    const specName = startNode?.data?.specName;
-
-    let options = [];
-    if (Array.isArray(imagesJson) && imagesJson.length && className && specName) {
-        for (const entry of imagesJson) {
-            if (entry[className] && entry[className][specName]) {
-                options = entry[className][specName].map((it) => {
-                    const fullUrl = it.url?.startsWith(iconURL) ? it.url : `${iconURL}${it.url}`;
-                    return { ...it, url: fullUrl };
-                });
-                break;
-            }
-        }
-    }
-
-    if (!options.length) {
-        options = data?.options || [];
-    }
-
-    const selectedValue = (selectedImage && selectedName) ? JSON.stringify({ url: selectedImage, name: selectedName, types: selectedTypes }) : '';
-
     return (
         <div className="ability-node">
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <select onChange={handleChange} value={selectedValue} style={{ minWidth: 160 }}>
-                    <option value="">-- select ability --</option>
-                    {options.map((opt) => {
-                        const value = JSON.stringify({ url: opt.url, name: opt.name, types: opt.types });
-                        return (
-                            <option key={opt.id ?? opt.name} value={value}>{opt.name}</option>
-                        );
-                    })}
-                </select>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 }}>
                     {selectedImage && (
                         <img src={selectedImage} alt={selectedName || 'Selected'} style={{ display: 'block', marginTop: '5px', maxWidth: 64 }} />
                     )}
                     {selectedName && (
-                        <div style={{ marginTop: 4, fontSize: 12 }}></div>
+                        <div style={{ marginTop: 4, fontSize: 12 }}>{selectedName}</div>
                     )}
                 </div>
-                {/* <div className='conditional-checkbox' style={{ top: "50%", position: "absolute", right: "8px" }}>
-                    <label style={{ display: 'absolute', alignItems: 'center', top: '5px' }}>If</label>
-                    <input type="checkbox" onChange={toggleHandles} checked={data.showHandles || false} />
-
-                    <Handle type="source" position={Position.Right} id="cond-left-source-handle" style={{ position: "absolute", right: "-8px" }} className={!data.showHandles ? 'handle-hidden' : ''} />
-                </div> */}
             </div>
-            <Handle type="source" position={Position.Right} id="cond-ability-right-source-handle" />
-            <Handle type="target" position={Position.Left} id="cond-ability-left-target-handle" />
+            <LimitHandle type="source" position={Position.Right} id="cond-ability-right-source-handle" connectioncount={1}/>
+            <LimitHandle type="target" position={Position.Left} id="cond-ability-left-target-handle" connectioncount={1}/>
         </div>
     );
 }
 
-export function ConditoinalOrNode() {
+export function ConditionalOrNode() {
     return (
         <div className="conditional-or-node">
             <label style={{ display: 'absolute', alignItems: 'center', top: '5px' }}>COND: OR</label>
-            <Handle type="target" position={Position.Left} id="cond-left-target-handle" />
-            <Handle type="source" position={Position.Right} id="cond-right-source-handle" />
+            <LimitHandle type="target" position={Position.Left} id="cond-left-target-handle" connectioncount={1}/>
+            <LimitHandle type="source" position={Position.Right} id="cond-right-source-handle" connectioncount={1}/>
         </div>
     );
 }
@@ -259,84 +125,20 @@ export function ConditionalAndNode() {
     return (
         <div className="conditional-and-node">
             <label style={{ display: 'absolute', alignItems: 'center', top: '5px' }}>COND: AND</label>
-            <Handle type="target" position={Position.Left} id="cond-left-target-handle" />
-            <Handle type="source" position={Position.Right} id="cond-right-source-handle" />
+            <LimitHandle type="target" position={Position.Left} id="cond-left-target-handle" connectioncount={1}/>
+            <LimitHandle type="source" position={Position.Right} id="cond-right-source-handle" connectioncount={1}/>
         </div>
     );
 }
 
 export function APLStartNode({ id, data }) {
-    const { setNodes } = useReactFlow();
-    const [classSpecs, setClassSpecs] = useState({});
-    const [classes, setClasses] = useState([]);
-    const [className, setClassName] = useState(data?.className || '');
-    const [specName, setSpecName] = useState(data?.specName || '');
-
-    useEffect(() => {
-        try {
-            const json = Array.isArray(abilitiesJson) ? abilitiesJson : [];
-            const mapping = {};
-            const cls = [];
-            for (const entry of json) {
-                const keys = Object.keys(entry);
-                if (!keys.length) continue;
-                const c = keys[0];
-                mapping[c] = Object.keys(entry[c] || {});
-                cls.push(c);
-            }
-            setClassSpecs(mapping);
-            setClasses(cls);
-
-            const defaultClass = data?.className || cls[0] || '';
-            const defaultSpec = data?.specName || (mapping[defaultClass] ? mapping[defaultClass][0] : '');
-            setClassName(defaultClass);
-            setSpecName(defaultSpec);
-        } catch (e) {
-            setClassSpecs({});
-            setClasses([]);
-        }
-    }, [data]);
-
-    useEffect(() => {
-        setNodes((nds) =>
-            nds.map((node) => {
-                if (node.id === id) {
-                    return { ...node, data: { ...node.data, className, specName } };
-                }
-                return node;
-            })
-        );
-    }, [className, specName, id, setNodes]);
-
-    const onClassChange = (e) => {
-        const newClass = e.target.value;
-        setClassName(newClass);
-        const specs = classSpecs[newClass] || [];
-        setSpecName(specs[0] || '');
-    };
-
-    const onSpecChange = (e) => setSpecName(e.target.value);
-
-    const specsForClass = classSpecs[className] || [];
+    const className = data?.className || '';
+    const specName = data?.specName || '';
 
     return (
         <div className="apl-start-node" style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center', padding: 8 }}>
             <div>Start</div>
-            <div style={{ display: 'flex', gap: 8 }}>
-                <select value={className} onChange={onClassChange}>
-                    {classes.length ? classes.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                    )) : <option value="">(no classes)</option>}
-                </select>
-
-                <select value={specName} onChange={onSpecChange} disabled={!specsForClass.length}>
-                    {specsForClass.length ? specsForClass.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                    )) : <option value="">(no specs)</option>}
-                </select>
-            </div>
-
-            <Handle type="source" position={Position.Bottom} id="bottom-source-handle" />
+            <LimitHandle type="source" position={Position.Bottom} id="bottom-source-handle" connectioncount={1}/>
         </div>
     );
 }
@@ -345,7 +147,7 @@ export function APLEndNode() {
     return (
         <div className="apl-end-node">
             End
-            <Handle type="target" position={Position.Top} id="top-target-handle" />
+            <LimitHandle type="target" position={Position.Top} id="top-target-handle" connectioncount={1}/>
         </div>
     );
 }
