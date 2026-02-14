@@ -4,7 +4,7 @@ import { useReactFlow } from '@xyflow/react';
 import abilitiesJson from '../public/SpellIcons/abilities.json';
 import { Collapse } from '@kunukn/react-collapse';
 
-const iconURL = '/VisualAPL/SpellIcons';
+const iconURL = '/VisualAPL-Staging/SpellIcons';
 
 export default () => {
   const [type, setType] = useDnD();
