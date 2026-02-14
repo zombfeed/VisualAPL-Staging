@@ -1,0 +1,130 @@
+[
+    {
+        "Rogue": {
+            "Outlaw": [
+                {
+                    "name": "Dispatch",
+                    "types": ["damage"],
+                    "url": "/Outlaw/ability_rogue_waylay.png"
+                },
+                {
+                    "name": "Ambush",
+                    "types": ["damage"],
+                    "url": "/Outlaw/ability_rogue_ambush.png"
+                },
+                {
+                    "name": "Roll the Bones",
+                    "types": ["buff", "cooldown"],
+                    "url": "/Outlaw/ability_rogue_rollthebones.png"
+                },
+                {
+                    "name": "Roll the Bones: One of a Kind",
+                    "types": ["buff"],
+                    "url": "/Outlaw/inv12_ability_rogue_rollthebones_one.png"
+                },
+                {
+                    "name": "Roll the Bones: Double Trouble",
+                    "types": ["buff"],
+                    "url": "/Outlaw/inv12_ability_rogue_rollthebones_two.png"
+                },
+                {
+                    "name": "Roll the Bones: Triple Threat",
+                    "types": ["buff"],
+                    "url": "/Outlaw/inv12_ability_rogue_rollthebones_three.png"
+                },
+                {
+                    "name": "Roll the Bones: Jackpot",
+                    "types": ["buff"],
+                    "url": "/Outlaw/inv12_ability_rogue_rollthebones_jackpot.png"
+                },
+                {
+                    "name": "Sinister Strike",
+                    "types": ["damage"],
+                    "url": "/Outlaw/spell_shadow_ritualofsacrifice.png"
+                },
+                {
+                    "name": "Adrenaline Rush",
+                    "types": ["cooldown", "buff"],
+                    "url": "/Outlaw/spell_shadow_shadowworddominate.png"
+                },
+                {
+                    "name": "Blade Rush",
+                    "types": ["damage", "cooldown"],
+                    "url": "/Outlaw/ability_arakkoa_spinning_blade.png"
+                },
+                {
+                    "name": "Killing Spree",
+                    "types": ["damage", "cooldown"],
+                    "url": "/Outlaw/inv_112_rogue_betweentheeyes.png"
+                },
+                {
+                    "name": "Between the Eyes",
+                    "types": ["damage", "cooldown"],
+                    "url": "/Outlaw/inv_weapon_rifle_01.png"
+                },
+                {
+                    "name": "Opportunity",
+                    "types": ["buff"],
+                    "url": "/Outlaw/ability_rogue_pistolshot.png"
+                },
+                {
+                    "name": "Preparation",
+                    "types": ["cooldown"],
+                    "url": "/Outlaw/ability_rogue_preparation.png"
+                },
+                {
+                    "name": "Keep It Rolling",
+                    "types": ["cooldown"],
+                    "url": "/Outlaw/ability_rogue_keepitrolling.png"
+                },
+                {
+                    "name": "Pistol Shot",
+                    "types": ["damage"],
+                    "url": "/Outlaw/ability_rogue_pistolshot.png"
+                }
+            ],
+            "Subtlety": [
+                {
+                    "name": "Shadow Dance",
+                    "types": ["buff", "cooldown"],
+                    "url": "/Subtlety/ability_rogue_shadowdance.png"
+                },
+                {
+                    "name": "Shadowstrike",
+                    "types": ["damage"],
+                    "url": "/Subtlety/ability_rogue_shadowstrike.png"
+                },
+                {
+                    "name": "Eviscerate",
+                    "types": ["damage"],
+                    "url": "/Subtlety/ability_rogue_eviscerate.png"
+                },
+                {
+                    "name": "Shuriken Storm",
+                    "types": ["damage"],
+                    "url": "/Subtlety/ability_rogue_shurikenstorm.png"
+                },
+                {
+                    "name": "Enveloping Shadows",
+                    "types": ["buff"],
+                    "url": "/Subtlety/ability_rogue_envelopingshadows.png"
+                },
+                {
+                    "name": "Dark Shadow",
+                    "types": ["ability"],
+                    "url": "/Subtlety/ability_rogue_darkshadow.png"
+                },
+                {
+                    "name": "Vanish",
+                    "types": ["cooldown"],
+                    "url": "/Subtlety/ability_stealth.png"
+                },
+                {
+                    "name": "Master of Shadows",
+                    "types": ["buff"],
+                    "url": "/Subtlety/ability_rogue_masterofshadows.png"
+                }
+            ]
+        }
+    }
+]
